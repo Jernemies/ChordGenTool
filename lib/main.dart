@@ -98,6 +98,7 @@ class _HomePageState extends State<HomePage> {
 
   void _onItemTapped(int index) {
     setState(() {
+      //asd
       _selectedIndex = index;
       // _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
     });
