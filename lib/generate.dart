@@ -2,9 +2,9 @@ import 'chord.dart';
 import 'dart:math';
 
 List<Chord> generate(int numChords, bool extend){
-	//numChords: Let user define the amount of chords to generate from 1 to 16.
+	//numChords: Let user define the amount of chords to generate from 1 to 8.
 	//extend: User can choose to include extensions past 7
-  numChords = numChords.clamp(1, 16);
+  numChords = numChords.clamp(1, 8);
   //Chord tones 1,3,5,7. This list stores the quality of the tones (flat, natural, sharp)
   List<int> baseChord = [1,1,1,1];
   //Chord tones 9,11,13
@@ -54,11 +54,11 @@ List<Chord> generate(int numChords, bool extend){
           //Check if 3 is flat. If yes, only flat is possible for 5
           if (tones[1] == 0)
           {
-            alteredTone = alterFlatSharp(tone);
+            alteredTone = alterFlat(tone);
           }
           else
           {
-            alteredTone = alterFlat(tone);
+            alteredTone = alterFlatSharp(tone);
           }
         }
         //Seventh
@@ -71,6 +71,7 @@ List<Chord> generate(int numChords, bool extend){
             if (rndBool)
             {
               alteredTone = doubleFlat(tone);
+              tones[1] = 0;
               chordComplete = true;
             }
             else

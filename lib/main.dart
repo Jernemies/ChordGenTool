@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'chord.dart';
 import 'generate.dart';
 import 'play.dart';
+import 'dart:async';
 
 
 /*
@@ -67,6 +68,13 @@ class _GeneratePageState extends State<GeneratePage> {
   String extensionsText = '(9,11,13)';
   List<Chord> chordList = [];
   bool notPlaying = true;
+  List<AudioPlayer> audioPlayers = List.generate(
+    4,
+    (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
+  );
+  // AudioPlayer audioPlayer = AudioPlayer();
+  final Timer timer = Timer(const Duration(seconds: 2), () => null);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,11 +129,17 @@ class _GeneratePageState extends State<GeneratePage> {
                     onPressed:() {
                       setState(() {
                         notPlaying = false;
-                        Future.delayed(Duration(seconds: chords), () {
-                          setState(() {
-                            notPlaying = true;
-                          });
-                        });
+                          for (int i = 0; i < chordList.length; i++) {
+                            List<String> notes = notesToPlay(chordList[i]);
+                            print(notes);
+                            for (int j = 0; j < notes.length; j++) {
+                              audioPlayers[0].play(AssetSource(notes[0]));
+                              audioPlayers[1].play(AssetSource(notes[1]));
+                              audioPlayers[2].play(AssetSource(notes[2]));
+                              audioPlayers[3].play(AssetSource(notes[3]));
+                              }
+                          }
+                        notPlaying = true;
                       });
                     },)),
               ),
@@ -224,4 +238,8 @@ class _HomePageState extends State<HomePage> {
       );
     
   }
+}
+
+Future<void> playChord(int chords, List<Chord> chordList) async {
+
 }
