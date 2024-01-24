@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'chord.dart';
 import 'generate.dart';
+import 'play.dart';
 
 
 /*
@@ -43,7 +45,7 @@ class AboutPage extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(20),
               alignment: Alignment.center,
-              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. Chord voicings are not specified, so feel free to voice them however you like. Keys are not specified at the moment, so you'll have to transpose them to any key you like.")
+              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :)")
             ),
           ),
         ),
@@ -61,9 +63,10 @@ class GeneratePage extends StatefulWidget {
 
 class _GeneratePageState extends State<GeneratePage> {
   int chords = 4;
-  String chordsText = '';
+  String chordsText = 'chords';
   String extensionsText = '(9,11,13)';
   List<Chord> chordList = [];
+  bool notPlaying = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,24 +77,58 @@ class _GeneratePageState extends State<GeneratePage> {
           body: Center(
           child: Column(
           children: [
-            Container(
-              height: 160,
+            SizedBox(
+              //Sointujen määrä
+              height: 80,
               child: Container(
                 alignment: Alignment.center,
-                height: 160,
+                height: 80,
                 child: SpinBox(
                 min: 1,
-                max: 16,
+                max: 8,
                 step: 1,
                 value: chords.toDouble(),
                 onChanged: (value) => setState(() => chords = value.toInt()),
                 decoration: const InputDecoration(labelText: 'Number of Chords'),),
               ),
             ),
-            Container(
-              //For looppi, jolla luodaan joka soinnulle oma container
-              alignment: Alignment.centerLeft,
-              child: Text(chordsText.toString(), style: const TextStyle(fontSize: 80),),
+            Expanded(
+              //Soinnut
+              child: FittedBox(
+                alignment: Alignment.centerLeft,
+                child: Text(chordsText.toString(), softWrap: false,),
+              ),
+            ),SizedBox(
+              //Soitto
+              height: 120,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                height: 120,
+                margin: const EdgeInsets.only(left: 50),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 3,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    iconSize: 60,
+                    icon: notPlaying
+                    ? Icon(Icons.play_arrow)
+                    : Icon(Icons.pause),
+                    onPressed:() {
+                      setState(() {
+                        notPlaying = false;
+                        Future.delayed(Duration(seconds: chords), () {
+                          setState(() {
+                            notPlaying = true;
+                          });
+                        });
+                      });
+                    },)),
+              ),
             ),]
         ),),
         floatingActionButton: Container(
@@ -100,9 +137,10 @@ class _GeneratePageState extends State<GeneratePage> {
           child: FloatingActionButton(
             onPressed: () {
               chordList = generate(chords, true);
+              chordsText = '';
               for (int i = 0; i < chords; i++) {
                   String chordName = chordList[i].name.toString();
-                  chordsText += chordName;
+                  chordsText += chordName + '\n';
                 }
               setState(() {
                 chordsText;

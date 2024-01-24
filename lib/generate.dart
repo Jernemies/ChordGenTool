@@ -136,8 +136,11 @@ List<Chord> generate(int numChords, bool extend){
         }
       }
       //Name chord, add to list
-			String name = nameChord(root, tones, chordComplete);
       List<String> alteredExtensions = nameExtensions(tones.sublist(4));
+			String name = nameChord(root, tones, chordComplete);
+      for (int i = 0; i < alteredExtensions.length; i++){
+        name += alteredExtensions[i];
+      }
 			Chord chord = Chord(root, tones, name, alteredExtensions);
 			chords.add(chord);
 		}
@@ -187,7 +190,7 @@ String nameChord(int root, List<int> tones, bool specialCase)
   //Adds flat or sharp prefix to the root
   if (flats.contains(root))
   {
-    name = "b";
+    name = "♭";
   }
   else if (sharps.contains(root))
   {
@@ -265,7 +268,7 @@ String nameChord(int root, List<int> tones, bool specialCase)
   switch (tones[3])
   {
     case 1:
-      name += "maj7";
+      name += "Maj7";
       //Handles altered 5ths
       if (tones[2] == 2)
       {
@@ -280,7 +283,7 @@ String nameChord(int root, List<int> tones, bool specialCase)
       }
       else if (tones[2] == 0)
       {
-        name += "b5";
+        name += "♭5";
       }
     default:
   }
@@ -289,6 +292,10 @@ String nameChord(int root, List<int> tones, bool specialCase)
 }
 List<String> nameExtensions(List extensions){
   List<String> names = [];
+  if (extensions == [1,1,1])
+  {
+    return names;
+  }
   for (int i = 0; i < extensions.length; i++)
   {
     switch (i)
@@ -298,29 +305,29 @@ List<String> nameExtensions(List extensions){
         switch (extensions[i])
         {
           case 0:
-            names.add("b9");
+            names.add(" (♭9 ");
           case 1:
-            names.add("9");
+            names.add(" (");
           case 2:
-            names.add("#9");
+            names.add(" (#9 ");
         }
       //eleventh
       case 1:
         switch (extensions[i])
         {
           case 1:
-            names.add("11");
+            names.add("");
           case 2:
-            names.add("#11");
+            names.add("#11 ");
         }
       //thirteenth
       case 2:
         switch (extensions[i])
         {
           case 0:
-            names.add("b13");
+            names.add("♭13)");
           case 1:
-            names.add("13");
+            names.add(")");
         }
     }
   }
