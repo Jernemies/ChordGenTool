@@ -68,11 +68,11 @@ class _GeneratePageState extends State<GeneratePage> {
   String extensionsText = '(9,11,13)';
   List<Chord> chordList = [];
   bool notPlaying = true;
-  List<AudioPlayer> audioPlayers = List.generate(
-    4,
-    (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
-  );
-  // AudioPlayer audioPlayer = AudioPlayer();
+  // List<AudioPlayer> audioPlayers = List.generate(
+  //   4,
+  //   (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
+  // );
+  AudioPlayer audioPlayer = AudioPlayer();
   final Timer timer = Timer(const Duration(seconds: 2), () => null);
 
   @override
@@ -133,10 +133,8 @@ class _GeneratePageState extends State<GeneratePage> {
                             List<String> notes = notesToPlay(chordList[i]);
                             print(notes);
                             for (int j = 0; j < notes.length; j++) {
-                              audioPlayers[0].play(AssetSource(notes[0]));
-                              audioPlayers[1].play(AssetSource(notes[1]));
-                              audioPlayers[2].play(AssetSource(notes[2]));
-                              audioPlayers[3].play(AssetSource(notes[3]));
+                              audioPlayer.play(AssetSource(notes[j]));
+                              timer;
                               }
                           }
                         notPlaying = true;
