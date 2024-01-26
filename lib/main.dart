@@ -46,7 +46,7 @@ class AboutPage extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(20),
               alignment: Alignment.center,
-              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes.")
+              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes. Playback is in the key of A.")
             ),
           ),
         ),
@@ -64,6 +64,7 @@ class GeneratePage extends StatefulWidget {
 
 class _GeneratePageState extends State<GeneratePage> {
   int chords = 4;
+  int generatedChords = 0;
   String chordsText = 'I';
   String extensionsText = '(9,11,13)';
   Chord initialChord = Chord(0, [3,5,7], 'I', []);
@@ -125,23 +126,38 @@ class _GeneratePageState extends State<GeneratePage> {
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: IconButton(
-                    iconSize: 60,
-                    icon: const Icon(Icons.play_arrow),
-                    onPressed:() {
-                      setState(() {
-                        //Luo soinnun juuresta tiedostonimen ja soittaa sen
-                        note = notesToPlay(chordList[chordIndex]);
-                        print(note);
-                        audioPlayer.play(AssetSource(note));
-                        //ChordIndex pitää lukua siitä, missä soinnussa mennään
-                        chordIndex++;
-                        if(chordIndex == chordList.length)
-                        {
-                          chordIndex = 0;
-                        }                          
-                      });
-                    },)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        iconSize: 60,
+                        icon: const Icon(Icons.play_arrow),
+                        onPressed:() {
+                          setState(() {
+                            //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
+                            note = notesToPlay(chordList[chordIndex]);
+                            print(note);
+                            if(chordIndex >= generatedChords)
+                            {
+                              chordIndex = 1;
+                              audioPlayer.play(AssetSource(note));
+                            } 
+
+                            //ChordIndex pitää lukua siitä, missä soinnussa mennään
+
+
+                            else
+                            {
+                              chordIndex++;
+                              audioPlayer.play(AssetSource(note));
+                            }                         
+                          });
+                        },),
+                        Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Text(chordIndex.toString(), style: const TextStyle(fontSize: 30),)),
+                    ],
+                  )),
               ),
             ),]
         ),),
@@ -152,6 +168,7 @@ class _GeneratePageState extends State<GeneratePage> {
             onPressed: () {
               //Luo soinnut
               chordList = generate(chords, true);
+              generatedChords = chords;
               chordIndex = 0;
               chordsText = '';
               for (int i = 0; i < chords; i++) {
