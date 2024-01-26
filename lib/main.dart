@@ -46,7 +46,7 @@ class AboutPage extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(20),
               alignment: Alignment.center,
-              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :)")
+              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes.")
             ),
           ),
         ),
@@ -64,10 +64,13 @@ class GeneratePage extends StatefulWidget {
 
 class _GeneratePageState extends State<GeneratePage> {
   int chords = 4;
-  String chordsText = 'chords';
+  String chordsText = 'I';
   String extensionsText = '(9,11,13)';
+  Chord initialChord = Chord(0, [3,5,7], 'I', []);
   List<Chord> chordList = [];
-  bool notPlaying = true;
+  String note = '';
+  int chordIndex = 0;
+  // bool notPlaying = true;
   // List<AudioPlayer> audioPlayers = List.generate(
   //   4,
   //   (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
@@ -77,6 +80,7 @@ class _GeneratePageState extends State<GeneratePage> {
 
   @override
   Widget build(BuildContext context) {
+    chordList.add(initialChord);
     return Scaffold(
         appBar: AppBar(
           title: const Text('Generate'),
@@ -123,21 +127,19 @@ class _GeneratePageState extends State<GeneratePage> {
                   ),
                   child: IconButton(
                     iconSize: 60,
-                    icon: notPlaying
-                    ? Icon(Icons.play_arrow)
-                    : Icon(Icons.pause),
+                    icon: const Icon(Icons.play_arrow),
                     onPressed:() {
                       setState(() {
-                        notPlaying = false;
-                          for (int i = 0; i < chordList.length; i++) {
-                            List<String> notes = notesToPlay(chordList[i]);
-                            print(notes);
-                            for (int j = 0; j < notes.length; j++) {
-                              audioPlayer.play(AssetSource(notes[j]));
-                              timer;
-                              }
-                          }
-                        notPlaying = true;
+                        //Luo soinnun juuresta tiedostonimen ja soittaa sen
+                        note = notesToPlay(chordList[chordIndex]);
+                        print(note);
+                        audioPlayer.play(AssetSource(note));
+                        //ChordIndex pitää lukua siitä, missä soinnussa mennään
+                        chordIndex++;
+                        if(chordIndex == chordList.length)
+                        {
+                          chordIndex = 0;
+                        }                          
                       });
                     },)),
               ),
@@ -148,7 +150,9 @@ class _GeneratePageState extends State<GeneratePage> {
           width: 150,
           child: FloatingActionButton(
             onPressed: () {
+              //Luo soinnut
               chordList = generate(chords, true);
+              chordIndex = 0;
               chordsText = '';
               for (int i = 0; i < chords; i++) {
                   String chordName = chordList[i].name.toString();
