@@ -4,13 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'chord.dart';
 import 'generate.dart';
 import 'play.dart';
-import 'dart:async';
 
-
-/*
-https://api.dart.dev/stable/3.2.4/dart-math/Random-class.html
-https://pub.dev/packages/audioplayers
-https://pub.dev/packages/midi_util */
 
 void main() {
   runApp(const MyApp());
@@ -77,7 +71,6 @@ class _GeneratePageState extends State<GeneratePage> {
   //   (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
   // );
   AudioPlayer audioPlayer = AudioPlayer();
-  final Timer timer = Timer(const Duration(seconds: 2), () => null);
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +106,10 @@ class _GeneratePageState extends State<GeneratePage> {
               ),
             ),SizedBox(
               //Soitto
-              height: 120,
+              height: 116,
               child: Container(
                 alignment: Alignment.centerLeft,
-                height: 120,
+                height: 116,
                 margin: const EdgeInsets.only(left: 50),
                 child: Container(
                   decoration: BoxDecoration(
@@ -130,7 +123,7 @@ class _GeneratePageState extends State<GeneratePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        iconSize: 60,
+                        iconSize: 55,
                         icon: const Icon(Icons.play_arrow),
                         onPressed:() {
                           setState(() {
@@ -257,8 +250,4 @@ class _HomePageState extends State<HomePage> {
       );
     
   }
-}
-
-Future<void> playChord(int chords, List<Chord> chordList) async {
-
 }
