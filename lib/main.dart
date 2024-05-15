@@ -4,12 +4,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'chord.dart';
 import 'generate.dart';
 import 'play.dart';
-
+import 'scale.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -28,29 +27,31 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({ Key? key }) : super(key: key);
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('About Page'), backgroundColor: Colors.red,),
-       body: Center(
-          child: SizedBox.expand(
-            child: Container(
+      appBar: AppBar(
+        title: const Text('About Page'),
+        backgroundColor: Colors.red,
+      ),
+      body: Center(
+        child: SizedBox.expand(
+          child: Container(
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(20),
               alignment: Alignment.center,
-              child: const Text("This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes. Playback is in the key of A.")
-            ),
-          ),
+              child: const Text(
+                  "This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes. Playback is in the key of A.")),
         ),
+      ),
     );
-    
   }
 }
 
 class GeneratePage extends StatefulWidget {
-  const GeneratePage({ Key? key }) : super(key: key);
+  const GeneratePage({Key? key}) : super(key: key);
 
   @override
   State<GeneratePage> createState() => _GeneratePageState();
@@ -61,7 +62,7 @@ class _GeneratePageState extends State<GeneratePage> {
   int generatedChords = 0;
   String chordsText = 'I';
   String extensionsText = '(9,11,13)';
-  Chord initialChord = Chord(0, [3,5,7], 'I', []);
+  Chord initialChord = Chord(0, [3, 5, 7], 'I', []);
   List<Chord> chordList = [];
   String note = '';
   int chordIndex = 0;
@@ -76,42 +77,47 @@ class _GeneratePageState extends State<GeneratePage> {
   Widget build(BuildContext context) {
     chordList.add(initialChord);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Generate'),
-          backgroundColor: Colors.red,
-        ),
-          body: Center(
-          child: Column(
-          children: [
-            SizedBox(
-              //Sointujen määrä
+      appBar: AppBar(
+        title: const Text('Generate'),
+        backgroundColor: Colors.red,
+      ),
+      body: Center(
+        child: Column(children: [
+          SizedBox(
+            //Sointujen määrä
+            height: 80,
+            child: Container(
+              alignment: Alignment.center,
               height: 80,
-              child: Container(
-                alignment: Alignment.center,
-                height: 80,
-                child: SpinBox(
+              child: SpinBox(
                 min: 1,
                 max: 8,
                 step: 1,
                 value: chords.toDouble(),
                 onChanged: (value) => setState(() => chords = value.toInt()),
-                decoration: const InputDecoration(labelText: 'Number of Chords'),),
+                decoration:
+                    const InputDecoration(labelText: 'Number of Chords'),
               ),
             ),
-            Expanded(
-              //Soinnut
-              child: FittedBox(
-                alignment: Alignment.centerLeft,
-                child: Text(chordsText.toString(), softWrap: false,),
+          ),
+          Expanded(
+            //Soinnut
+            child: FittedBox(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                chordsText.toString(),
+                softWrap: false,
               ),
-            ),SizedBox(
-              //Soitto
+            ),
+          ),
+          SizedBox(
+            //Soitto
+            height: 116,
+            child: Container(
+              alignment: Alignment.centerLeft,
               height: 116,
+              margin: const EdgeInsets.only(left: 50),
               child: Container(
-                alignment: Alignment.centerLeft,
-                height: 116,
-                margin: const EdgeInsets.only(left: 50),
-                child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.red,
@@ -125,64 +131,67 @@ class _GeneratePageState extends State<GeneratePage> {
                       IconButton(
                         iconSize: 55,
                         icon: const Icon(Icons.play_arrow),
-                        onPressed:() {
+                        onPressed: () {
                           setState(() {
                             //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
                             note = notesToPlay(chordList[chordIndex]);
                             print(note);
-                            if(chordIndex >= generatedChords)
-                            {
+                            if (chordIndex >= generatedChords) {
                               chordIndex = 1;
                               audioPlayer.play(AssetSource(note));
-                            } 
+                            }
 
                             //ChordIndex pitää lukua siitä, missä soinnussa mennään
 
-
-                            else
-                            {
+                            else {
                               chordIndex++;
                               audioPlayer.play(AssetSource(note));
-                            }                         
+                            }
                           });
-                        },),
-                        Container(
+                        },
+                      ),
+                      Container(
                           margin: const EdgeInsets.only(right: 10),
-                          child: Text(chordIndex.toString(), style: const TextStyle(fontSize: 30),)),
+                          child: Text(
+                            chordIndex.toString(),
+                            style: const TextStyle(fontSize: 30),
+                          )),
                     ],
                   )),
-              ),
-            ),]
-        ),),
-        floatingActionButton: Container(
-          height: 80,
-          width: 150,
-          child: FloatingActionButton(
-            onPressed: () {
-              //Luo soinnut
-              chordList = generate(chords, true);
-              generatedChords = chords;
-              chordIndex = 0;
-              chordsText = '';
-              for (int i = 0; i < chords; i++) {
-                  String chordName = chordList[i].name.toString();
-                  chordsText += chordName + '\n';
-                }
-              setState(() {
-                chordsText;
-              });
-            },
+            ),
+          ),
+        ]),
+      ),
+      floatingActionButton: Container(
+        height: 80,
+        width: 150,
+        child: FloatingActionButton(
+          onPressed: () {
+            //Luo soinnut
+            //SCALE, SEN PLACEHOLDER
+            //JÄÄDYTYSTOIMINTO
+            chordList = generate(chords, true);
+            generatedChords = chords;
+            chordIndex = 0;
+            chordsText = '';
+            for (int i = 0; i < chords; i++) {
+              String chordName = chordList[i].name.toString();
+              chordsText += chordName + '\n';
+            }
+            setState(() {
+              chordsText;
+            });
+          },
           backgroundColor: Colors.red,
           child: const Text('Generate'),
-          ),
         ),
+      ),
     );
-    
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({ Key? key }) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -197,57 +206,58 @@ class _HomePageState extends State<HomePage> {
   //   AboutPage(),
   // ];
 
-
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
   }
+
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+      _pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.easeOut);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          children: const <Widget>[
-            GeneratePage(),
-            AboutPage(),
-          ],
+        body: SizedBox.expand(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            children: const <Widget>[
+              GeneratePage(),
+              AboutPage(),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Colors.red,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            label: 'About',
-            backgroundColor: Colors.red,
-          ),
-        ],
-      )
-      );
-    
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.help),
+              label: 'About',
+              backgroundColor: Colors.red,
+            ),
+          ],
+        ));
   }
 }
