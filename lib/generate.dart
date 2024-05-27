@@ -2,7 +2,7 @@ import 'chord.dart';
 import 'dart:math';
 
 List<Chord> generate(
-    int numChords, bool extend, List<int> scale, List<int> frozenChords) {
+    int numChords, bool extend, List<int> scale, List<Chord> frozenChords) {
   //numChords: Let user define the amount of chords to generate from 1 to 8.
   //extend: User can choose to include extensions past 7
   numChords = numChords.clamp(1, 8);
@@ -33,6 +33,7 @@ List<Chord> generate(
       root = Random().nextInt(12);
     }
     firstChord = false;
+    bool frozen = false;
     List<int> tones = [];
     //Used for generating diminished 7ths
     var rndBool = Random().nextInt(2) == 1;
@@ -40,9 +41,12 @@ List<Chord> generate(
     //Handle 1, 3, 5, 7
     for (int i = 0; i < baseChord.length; i++) {
       int tone = baseChord[i];
-      int alteredTone;
+      int alteredTone = 0;
+      if (frozenChords[i] != null) {
+        frozen = true;
+      }
       //Third
-      if (i == 1) {
+      else if (i == 1) {
         alteredTone = alterFlat(tone);
       }
       //Fifth
@@ -75,8 +79,10 @@ List<Chord> generate(
       tones.add(alteredTone);
     }
 
+    if (frozen == true) {
+    }
     //Handle 9, 11, 13
-    if (extend == true && chordComplete == false) {
+    else if (extend == true && chordComplete == false) {
       for (int i = 0; i < extensions.length; i++) {
         int alteredTone;
         int tone = extensions[i];
@@ -108,13 +114,18 @@ List<Chord> generate(
       }
     }
     //Name chord, add to list
-    List<String> alteredExtensions = nameExtensions(tones.sublist(4));
-    String name = nameChord(root, tones, chordComplete);
-    for (int i = 0; i < alteredExtensions.length; i++) {
-      name += alteredExtensions[i];
+
+    if (frozen == true) {
+      chords.add(frozenChords[j]);
+    } else {
+      List<String> alteredExtensions = nameExtensions(tones.sublist(4));
+      String name = nameChord(root, tones, chordComplete);
+      for (int i = 0; i < alteredExtensions.length; i++) {
+        name += alteredExtensions[i];
+      }
+      Chord chord = Chord(root, tones, name, alteredExtensions);
+      chords.add(chord);
     }
-    Chord chord = Chord(root, tones, name, alteredExtensions);
-    chords.add(chord);
   }
   chords.shuffle();
   return chords;
@@ -123,6 +134,55 @@ List<Chord> generate(
 List<int> generateScale(int amount, List<int> scale) {
   //Generates a scale based on amount of notes and specified notes, if applicable
   //Root is always 0
+  //Amount is between 5 and 8. I choose 8 because any more than that is basically chromatic
+  //Start by generating the 3 and the 7. This will create a 7th chord without a 5th
+  //Past this point, generate extensions in random order (5, 9, 11, 13). 5 counts as an extension
+  //Fill in the rest of the notes randomly
+  List<int> naturals = [4, 11, 2, 5, 7, 9];
+  List<int> notesPool = List<int>.generate(12, (int index) => index);
+  List<int> scaleNotes = [0];
+
+  for (int i = 1; i < amount; i++) {
+    int alteredNote = 0;
+    List<int> usedIndexes;
+    var indexList = List<int>.generate(amount, (int index) => index);
+    indexList.remove(0);
+    if (i == 1) {
+      //3rd
+      alteredNote = alterFlat(naturals[0]);
+      indexList.remove(1);
+    } else if (i == 2) {
+      //7th
+      alteredNote = alterFlatSharp(naturals[1]);
+      indexList.remove(2);
+    } else {
+      //Choose a random index from the list, handle the note, then remove the index from the list
+      int index = Random().nextInt(indexList.length);
+      switch (indexList[index]) {
+        case 3:
+          alteredNote = alterFlat(naturals[2]);
+          notesPool.remove(alteredNote);
+          break;
+        case 4:
+          alteredNote = alterSharp(naturals[3]);
+          notesPool.remove(alteredNote);
+          break;
+        case 5:
+          alteredNote = alterFlat(naturals[4]);
+          notesPool.remove(alteredNote);
+          break;
+        case 6:
+          alteredNote = alterFlatSharp(naturals[5]);
+          notesPool.remove(alteredNote);
+          break;
+        case 7:
+          alteredNote = notesPool[Random().nextInt(notesPool.length)];
+          break;
+      }
+    }
+    scaleNotes.add(alteredNote);
+  }
+  return scaleNotes;
 }
 
 int alterFlat(int tone) {
