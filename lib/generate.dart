@@ -2,9 +2,12 @@ import 'chord.dart';
 import 'dart:math';
 
 List<Chord> generate(
-    int numChords, bool extend, List<int> scale, List<Chord> frozenChords) {
+    int numChords, bool extend // List<int> scale, List<Chord> frozenChords
+    ) {
   //numChords: Let user define the amount of chords to generate from 1 to 8.
   //extend: User can choose to include extensions past 7
+  List<int> scale;
+  List<Chord> frozenChords;
   numChords = numChords.clamp(1, 8);
   //Chord tones 1,3,5,7. This list stores the quality of the tones (flat, natural, sharp)
   List<int> baseChord = [1, 1, 1, 1];
@@ -42,11 +45,11 @@ List<Chord> generate(
     for (int i = 0; i < baseChord.length; i++) {
       int tone = baseChord[i];
       int alteredTone = 0;
-      if (frozenChords[i] != null) {
-        frozen = true;
-      }
+      // if (frozenChords[i] != null) {
+      //   frozen = true;
+      // }
       //Third
-      else if (i == 1) {
+      if (i == 1) {
         alteredTone = alterFlat(tone);
       }
       //Fifth
@@ -115,17 +118,17 @@ List<Chord> generate(
     }
     //Name chord, add to list
 
-    if (frozen == true) {
-      chords.add(frozenChords[j]);
-    } else {
-      List<String> alteredExtensions = nameExtensions(tones.sublist(4));
-      String name = nameChord(root, tones, chordComplete);
-      for (int i = 0; i < alteredExtensions.length; i++) {
-        name += alteredExtensions[i];
-      }
-      Chord chord = Chord(root, tones, name, alteredExtensions);
-      chords.add(chord);
+    // if (frozen == true) {
+    //   chords.add(frozenChords[j]);
+    // } else {
+    List<String> alteredExtensions = nameExtensions(tones.sublist(4));
+    String name = nameChord(root, tones, chordComplete);
+    for (int i = 0; i < alteredExtensions.length; i++) {
+      name += alteredExtensions[i];
     }
+    Chord chord = Chord(root, tones, name, alteredExtensions);
+    chords.add(chord);
+    // }
   }
   chords.shuffle();
   return chords;

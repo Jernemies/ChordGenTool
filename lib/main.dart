@@ -50,6 +50,159 @@ class AboutPage extends StatelessWidget {
   }
 }
 
+class ScalePage extends StatefulWidget {
+  const ScalePage({Key? key}) : super(key: key);
+
+  @override
+  State<ScalePage> createState() => _ScalePageState();
+}
+
+class _ScalePageState extends State<ScalePage> {
+  int notes = 7;
+  int generatedNotes = 0;
+  String alterationsText1 = 'b2 b3';
+  String alterationsText2 = '#4 b6 b7';
+  String lineBreak = '\n';
+  String scaleText = '1 2 3 4 5 6 7';
+  List<int> initialScale = [0, 2, 4, 5, 7, 9, 11];
+  List<int> frozenScale = [];
+  List<int> resultScale = [];
+  String note = '';
+  int noteIndex = 0;
+  // bool notPlaying = true;
+  // List<AudioPlayer> audioPlayers = List.generate(
+  //   4,
+  //   (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
+  // );
+  AudioPlayer audioPlayer = AudioPlayer();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Scale'),
+        backgroundColor: Colors.red,
+      ),
+      body: Center(
+        child: Column(children: [
+          SizedBox(
+            //Nuottien määrä
+            height: 80,
+            child: Container(
+              alignment: Alignment.center,
+              height: 80,
+              child: SpinBox(
+                min: 5,
+                max: 8,
+                step: 1,
+                value: notes.toDouble(),
+                onChanged: (value) => setState(() => notes = value.toInt()),
+                decoration: const InputDecoration(
+                    labelText: 'Number of Notes in Scale'),
+              ),
+            ),
+          ),
+          SizedBox(
+            //Skaalan mukautetut nuotit
+            height: 200,
+            width: 300,
+            child: FittedBox(
+              alignment: AlignmentDirectional.bottomCenter,
+              child: Text(
+                alterationsText1.toString() +
+                    '       ' +
+                    alterationsText2.toString(),
+                style: const TextStyle(fontSize: 20),
+                softWrap: false,
+              ),
+            ),
+          ),
+          Expanded(
+            //Skaalan perusnuotit
+            child: FittedBox(
+              alignment: AlignmentDirectional.topCenter,
+              child: Text(
+                scaleText.toString(),
+                textAlign: TextAlign.center,
+                softWrap: false,
+              ),
+            ),
+          ),
+          SizedBox(
+            //Soitto
+            height: 116,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              height: 116,
+              margin: const EdgeInsets.only(left: 50),
+              child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 3,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // IconButton(
+                      //   iconSize: 55,
+                      //   icon: const Icon(Icons.play_arrow),
+                      //   onPressed: () {
+                      //     setState(() {
+                      //       //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
+                      //       note = notesToPlay(initialScale[noteIndex]);
+                      //       print(note);
+                      //       if (chordIndex >= generatedNotes) {
+                      //         chordIndex = 1;
+                      //         audioPlayer.play(AssetSource(note));
+                      //       }
+
+                      //       //ChordIndex pitää lukua siitä, missä soinnussa mennään
+
+                      //       else {
+                      //         chordIndex++;
+                      //         audioPlayer.play(AssetSource(note));
+                      //       }
+                      //     });
+                      //   },
+                      // ),
+                      Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Text(
+                            noteIndex.toString(),
+                            style: const TextStyle(fontSize: 30),
+                          )),
+                    ],
+                  )),
+            ),
+          ),
+        ]),
+      ),
+      floatingActionButton: Container(
+        height: 80,
+        width: 150,
+        child: FloatingActionButton(
+          onPressed: () {
+            //Luo soinnut
+            //SCALE, SEN PLACEHOLDER
+            //JÄÄDYTYSTOIMINTO
+            resultScale = generateScale(notes, frozenScale);
+            generatedNotes = notes;
+            noteIndex = 0;
+            scaleText = '';
+            setState(() {
+              scaleText;
+            });
+          },
+          backgroundColor: Colors.red,
+          child: const Text('Generate'),
+        ),
+      ),
+    );
+  }
+}
+
 class GeneratePage extends StatefulWidget {
   const GeneratePage({Key? key}) : super(key: key);
 
@@ -78,7 +231,7 @@ class _GeneratePageState extends State<GeneratePage> {
     chordList.add(initialChord);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Generate'),
+        title: const Text('Chords'),
         backgroundColor: Colors.red,
       ),
       body: Center(
@@ -239,6 +392,7 @@ class _HomePageState extends State<HomePage> {
             },
             children: const <Widget>[
               GeneratePage(),
+              ScalePage(),
               AboutPage(),
             ],
           ),
@@ -249,7 +403,12 @@ class _HomePageState extends State<HomePage> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: 'Chords',
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Scale',
               backgroundColor: Colors.red,
             ),
             BottomNavigationBarItem(

@@ -1,7 +1,7 @@
 import 'chord.dart';
 
 //Return filename
-String notesToPlay(Chord chord){
+String notesToPlay(Chord chord) {
   List<String> notes = [];
   int note = chord.root! + 1;
   String file = "$note.wav";
@@ -9,7 +9,6 @@ String notesToPlay(Chord chord){
   // for (int i = 0; i < chord.tones!.length; i++)
   // {
   //   note += chord.tones![i] - 1;
-
 
   //   note += chord.root!;
   //   if (note > 12)
