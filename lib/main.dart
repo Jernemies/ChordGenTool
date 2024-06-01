@@ -64,6 +64,20 @@ class _ScalePageState extends State<ScalePage> {
   String alterationsText2 = '#4 b6 b7';
   String lineBreak = '\n';
   String scaleText = '1 2 3 4 5 6 7';
+  List<String> scaleDegrees = [
+    '1',
+    'b2',
+    '2',
+    'b3',
+    '3',
+    '4',
+    '#4',
+    '5',
+    'b6',
+    '6',
+    'b7',
+    '7'
+  ];
   List<int> initialScale = [0, 2, 4, 5, 7, 9, 11];
   List<int> frozenScale = [];
   List<int> resultScale = [];
@@ -74,6 +88,16 @@ class _ScalePageState extends State<ScalePage> {
   //   4,
   //   (_) => AudioPlayer()..setReleaseMode(ReleaseMode.release),
   // );
+  TextSpan coloredTextSpan(int index, int size) {
+    return TextSpan(
+      text: scaleDegrees[index].toString() + ' ',
+      style: TextStyle(
+        fontSize: size.toDouble(),
+        color: resultScale.contains(index) ? Colors.red : Colors.black,
+      ),
+    );
+  }
+
   AudioPlayer audioPlayer = AudioPlayer();
   @override
   Widget build(BuildContext context) {
@@ -107,11 +131,16 @@ class _ScalePageState extends State<ScalePage> {
             width: 300,
             child: FittedBox(
               alignment: AlignmentDirectional.bottomCenter,
-              child: Text(
-                alterationsText1.toString() +
-                    '       ' +
-                    alterationsText2.toString(),
-                style: const TextStyle(fontSize: 20),
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    coloredTextSpan(1, 15),
+                    coloredTextSpan(3, 15),
+                    coloredTextSpan(6, 15),
+                    coloredTextSpan(8, 15),
+                    coloredTextSpan(10, 15),
+                  ],
+                ),
                 softWrap: false,
               ),
             ),
@@ -120,9 +149,18 @@ class _ScalePageState extends State<ScalePage> {
             //Skaalan perusnuotit
             child: FittedBox(
               alignment: AlignmentDirectional.topCenter,
-              child: Text(
-                scaleText.toString(),
-                textAlign: TextAlign.center,
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    coloredTextSpan(0, 20),
+                    coloredTextSpan(2, 20),
+                    coloredTextSpan(4, 20),
+                    coloredTextSpan(5, 20),
+                    coloredTextSpan(7, 20),
+                    coloredTextSpan(9, 20),
+                    coloredTextSpan(11, 20),
+                  ],
+                ),
                 softWrap: false,
               ),
             ),
@@ -184,15 +222,14 @@ class _ScalePageState extends State<ScalePage> {
         width: 150,
         child: FloatingActionButton(
           onPressed: () {
-            //Luo soinnut
-            //SCALE, SEN PLACEHOLDER
-            //JÄÄDYTYSTOIMINTO
-            resultScale = generateScale(notes, frozenScale);
-            generatedNotes = notes;
-            noteIndex = 0;
-            scaleText = '';
+            // resultScale = generateScale(notes, frozenScale);
+            // generatedNotes = notes;
+            // noteIndex = 0;
+            //color correspoding notes
             setState(() {
-              scaleText;
+              resultScale = generateScale(notes, frozenScale);
+              generatedNotes = notes;
+              noteIndex = 0;
             });
           },
           backgroundColor: Colors.red,
