@@ -146,8 +146,7 @@ List<int> generateScale(int amount, List<int> scale) {
   List<int> scaleNotes = [0];
 
   for (int i = 1; i < amount; i++) {
-    int alteredNote = 0;
-    List<int> usedIndexes;
+    int? alteredNote;
     var indexList = List<int>.generate(amount, (int index) => index);
     indexList.remove(0);
     if (i == 1) {
@@ -156,10 +155,9 @@ List<int> generateScale(int amount, List<int> scale) {
       indexList.remove(1);
     } else if (i == 2) {
       //7th
-      alteredNote = alterFlatSharp(naturals[1]);
+      alteredNote = alterFlat(naturals[1]);
       indexList.remove(2);
     } else {
-      //Choose a random index from the list, handle the note, then remove the index from the list
       int index = Random().nextInt(indexList.length);
       switch (indexList[index]) {
         case 3:
@@ -171,20 +169,30 @@ List<int> generateScale(int amount, List<int> scale) {
           notesPool.remove(alteredNote);
           break;
         case 5:
-          alteredNote = alterFlat(naturals[4]);
+          alteredNote = alterFlatSharp(naturals[4]);
           notesPool.remove(alteredNote);
           break;
         case 6:
-          alteredNote = alterFlatSharp(naturals[5]);
+          alteredNote = alterFlat(naturals[5]);
           notesPool.remove(alteredNote);
           break;
         case 7:
-          alteredNote = notesPool[Random().nextInt(notesPool.length)];
+          if (notesPool.isNotEmpty) {
+            alteredNote = notesPool[Random().nextInt(notesPool.length)];
+          }
           break;
       }
     }
-    scaleNotes.add(alteredNote);
+    // If alteredNote is still null, add a random note from notesPool
+    if (alteredNote == null && notesPool.isNotEmpty) {
+      alteredNote = notesPool[Random().nextInt(notesPool.length)];
+      notesPool.remove(alteredNote);
+    }
+    if (alteredNote != null) {
+      scaleNotes.add(alteredNote);
+    }
   }
+  print(scaleNotes);
   return scaleNotes;
 }
 

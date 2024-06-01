@@ -71,7 +71,7 @@ class _ScalePageState extends State<ScalePage> {
     'b3',
     '3',
     '4',
-    '#4',
+    '#4/b5',
     '5',
     'b6',
     '6',
@@ -136,6 +136,7 @@ class _ScalePageState extends State<ScalePage> {
                   children: [
                     coloredTextSpan(1, 15),
                     coloredTextSpan(3, 15),
+                    TextSpan(text: '   '),
                     coloredTextSpan(6, 15),
                     coloredTextSpan(8, 15),
                     coloredTextSpan(10, 15),
