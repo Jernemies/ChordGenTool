@@ -146,34 +146,46 @@ List<int> generateScale(int amount, List<int> scale) {
   List<int> scaleNotes = [0];
 
   for (int i = 1; i < amount; i++) {
+    //Currently doesn't honor much of a structure. Just generates random notes for now
     int? alteredNote;
     var indexList = List<int>.generate(amount, (int index) => index);
     indexList.remove(0);
+    notesPool.remove(0);
     if (i == 1) {
       //3rd
       alteredNote = alterFlat(naturals[0]);
       indexList.remove(1);
+      notesPool.remove(alteredNote);
     } else if (i == 2) {
       //7th
       alteredNote = alterFlat(naturals[1]);
       indexList.remove(2);
+      notesPool.remove(alteredNote);
     } else {
       int index = Random().nextInt(indexList.length);
       switch (indexList[index]) {
         case 3:
-          alteredNote = alterFlat(naturals[2]);
+          do {
+            alteredNote = alterFlat(naturals[2]);
+          } while (scaleNotes.contains(alteredNote));
           notesPool.remove(alteredNote);
           break;
         case 4:
-          alteredNote = alterSharp(naturals[3]);
+          do {
+            alteredNote = alterSharp(naturals[3]);
+          } while (scaleNotes.contains(alteredNote));
           notesPool.remove(alteredNote);
           break;
         case 5:
-          alteredNote = alterFlatSharp(naturals[4]);
+          do {
+            alteredNote = alterFlatSharp(naturals[4]);
+          } while (scaleNotes.contains(alteredNote));
           notesPool.remove(alteredNote);
           break;
         case 6:
-          alteredNote = alterFlat(naturals[5]);
+          do {
+            alteredNote = alterFlat(naturals[5]);
+          } while (scaleNotes.contains(alteredNote));
           notesPool.remove(alteredNote);
           break;
         case 7:
