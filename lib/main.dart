@@ -43,7 +43,7 @@ class AboutPage extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               alignment: Alignment.center,
               child: const Text(
-                  "This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes. Playback is in the key of A.")),
+                  "This tool generates random chord progressions. Chords are expressed as 7th chords, with extensions specified separately should you want thme. \n\n Uppercase=major, lowercase=minor. \n Chord voicings are not specified, so feel free to voice them however you like. \n\n Keys are not specified at the moment, so you'll have to transpose them to any key you like.\n\n For now only altered extensions will be shown with the chord. Regular extensions are meant to be used as desired anyway, so feel free to do that :) \n\n Unfortunately chord playback doesn't work properly atm, so the play button only plays the root notes. Playback is in the key of A.\n\n Now there's a scale generator too. It doesn't currently respect any kind of structure, but it's functional, aside from the random playback. \n\n Enjoy!")),
         ),
       ),
     );
@@ -184,28 +184,28 @@ class _ScalePageState extends State<ScalePage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // IconButton(
-                      //   iconSize: 55,
-                      //   icon: const Icon(Icons.play_arrow),
-                      //   onPressed: () {
-                      //     setState(() {
-                      //       //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
-                      //       note = notesToPlay(initialScale[noteIndex]);
-                      //       print(note);
-                      //       if (chordIndex >= generatedNotes) {
-                      //         chordIndex = 1;
-                      //         audioPlayer.play(AssetSource(note));
-                      //       }
+                      IconButton(
+                        iconSize: 55,
+                        icon: const Icon(Icons.play_arrow),
+                        onPressed: () {
+                          setState(() {
+                            //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
+                            note = scaleNotesToPlay(resultScale[noteIndex]);
+                            print(note);
+                            if (noteIndex >= generatedNotes) {
+                              noteIndex = 1;
+                              audioPlayer.play(AssetSource(note));
+                            }
 
-                      //       //ChordIndex pitää lukua siitä, missä soinnussa mennään
+                            //ChordIndex pitää lukua siitä, missä soinnussa mennään
 
-                      //       else {
-                      //         chordIndex++;
-                      //         audioPlayer.play(AssetSource(note));
-                      //       }
-                      //     });
-                      //   },
-                      // ),
+                            else {
+                              noteIndex++;
+                              audioPlayer.play(AssetSource(note));
+                            }
+                          });
+                        },
+                      ),
                       Container(
                           margin: const EdgeInsets.only(right: 10),
                           child: Text(
