@@ -83,6 +83,7 @@ class _ScalePageState extends State<ScalePage> {
   List<int> resultScale = [];
   String note = '';
   int noteIndex = 0;
+  int displayIndex = 1;
   // bool notPlaying = true;
   // List<AudioPlayer> audioPlayers = List.generate(
   //   4,
@@ -192,24 +193,22 @@ class _ScalePageState extends State<ScalePage> {
                             //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
                             note = scaleNotesToPlay(resultScale[noteIndex]);
                             print(note);
-                            if (noteIndex >= generatedNotes) {
-                              noteIndex = 1;
+                            if (noteIndex >= generatedNotes - 1) {
+                              noteIndex = 0;
                               audioPlayer.play(AssetSource(note));
-                            }
-
-                            //ChordIndex pitää lukua siitä, missä soinnussa mennään
-
-                            else {
+                            } else {
                               noteIndex++;
                               audioPlayer.play(AssetSource(note));
                             }
+                            displayIndex = noteIndex + 1;
+                            //noteIndex pitää lukua siitä, missä soinnussa mennään
                           });
                         },
                       ),
                       Container(
                           margin: const EdgeInsets.only(right: 10),
                           child: Text(
-                            noteIndex.toString(),
+                            displayIndex.toString(),
                             style: const TextStyle(fontSize: 30),
                           )),
                     ],
@@ -257,6 +256,7 @@ class _GeneratePageState extends State<GeneratePage> {
   List<Chord> chordList = [];
   String note = '';
   int chordIndex = 0;
+  int displayIndex = 1;
   // bool notPlaying = true;
   // List<AudioPlayer> audioPlayers = List.generate(
   //   4,
@@ -327,24 +327,22 @@ class _GeneratePageState extends State<GeneratePage> {
                             //Luo soinnun juuresta tiedostonimen ja soittaa sen. "1.wav" on A-nuotti
                             note = notesToPlay(chordList[chordIndex]);
                             print(note);
-                            if (chordIndex >= generatedChords) {
-                              chordIndex = 1;
+                            if (chordIndex >= generatedChords - 1) {
+                              chordIndex = 0;
                               audioPlayer.play(AssetSource(note));
-                            }
-
-                            //ChordIndex pitää lukua siitä, missä soinnussa mennään
-
-                            else {
+                            } else {
                               chordIndex++;
                               audioPlayer.play(AssetSource(note));
                             }
+                            displayIndex = chordIndex + 1;
+                            //ChordIndex pitää lukua siitä, missä soinnussa mennään
                           });
                         },
                       ),
                       Container(
                           margin: const EdgeInsets.only(right: 10),
                           child: Text(
-                            chordIndex.toString(),
+                            displayIndex.toString(),
                             style: const TextStyle(fontSize: 30),
                           )),
                     ],

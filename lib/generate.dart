@@ -204,6 +204,7 @@ List<int> generateScale(int amount, List<int> scale) {
       scaleNotes.add(alteredNote);
     }
   }
+  scaleNotes.sort();
   print(scaleNotes);
   return scaleNotes;
 }
