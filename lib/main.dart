@@ -438,12 +438,12 @@ class _HomePageState extends State<HomePage> {
           onTap: _onItemTapped,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.music_note),
               label: 'Chords',
               backgroundColor: Colors.red,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.music_note_outlined),
               label: 'Scale',
               backgroundColor: Colors.red,
             ),
